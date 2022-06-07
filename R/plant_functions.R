@@ -8,14 +8,14 @@
 # yrange = function(obj) UseMethod("zrange")
 # insertionPosition = function(obj) UseMethod("insertionPosition")
 # meanInsertionAngle = function(obj) UseMethod("meanInsertionAngle")
-#meanInterbranch = function(obj, allroot=T) UseMethod("meanInterbranch")
+# meanInterbranch = function(obj, allroot=T) UseMethod("meanInterbranch")
 # nLatRoot = function(obj) UseMethod("nLatRoot")
 # nPrimRoot = function(obj) UseMethod("nPrimRoot")
 # nRoot = function(obj) UseMethod("nRoot")  
 
 ############################################################
 
-#' Plant object, containing a root system, composed of roots
+#' @title Plant object, containing a root system, composed of roots
 #' @param roots    the root object contained in the plant. Can be null and incremented afterward
 #' @keywords rsml
 #' @author Guillaume Lobet - guillaume.lobet(at)ulg.ac.be
@@ -23,9 +23,8 @@
 #' @export
 #' @examples
 #' pl <- plant()
-plant = 
-  function(roots = NULL)
-  {
+#' @export
+plant = function(roots = NULL) {
     pls = list(roots = roots)
     class(pls) = "plant"
     pls
@@ -33,7 +32,7 @@ plant =
 
 ############################################################
 
-#' Add a root to an existing plant. Returns the plant with the added root
+#' @title Add a root to an existing plant. Returns the plant with the added root
 #' @param pl  the plant to add the root to
 #' @param ro  the root object to add to the plant.
 #' @keywords rsml
@@ -314,11 +313,11 @@ zrangePlant =
 #' data(anagallis)
 #' plot(anagallis, threed=TRUE)
 plot.plant = 
-  function(x, threed = F, ...)
+  function(x, threed = F, aspect = T, add = F, ...)
   {
     obj <- x
     if(threed){
-      plot3d(1, 1, 1, type="n", xlim=xrangePlant(obj), ylim=yrangePlant(obj) , zlim=zrangePlant(obj), ylab="", xlab="")
+      plot3d(1, 1, 1, type="n", xlim=xrangePlant(obj), ylim=yrangePlant(obj) , zlim=zrangePlant(obj), ylab="", xlab="", aspect = aspect)
       for(j in 1:nPrimRoot(obj)){
         r <- obj$roots[[j]]
         plot3d(coords(r)$x, coords(r)$y, coords(r)$z, lwd=2, col="red", type="l", add=T)
@@ -336,7 +335,7 @@ plot.plant =
         }
       }
     } else {
-      plot(1, 1, type="n", xlim=xrangePlant(obj), ylim=yrangePlant(obj), ylab="", xlab="")
+     plot(1, 1, type="n", xlim=xrangePlant(obj), ylim=yrangePlant(obj), ylab="", xlab="")
       for(j in 1:nPrimRoot(obj)){
         r <- obj$roots[[j]]
         lines(coords(r)$x, -coords(r)$y, lwd=2, col="red")
@@ -355,6 +354,74 @@ plot.plant =
       }
     } 
   }
+
+############################################################
+
+#' Plot all the root system in a list of "plant" objects
+#' @param x object of class plant
+#' @param threed make a 3D plot for the plant
+#' @param ... plant objects, or a single list of plant objects
+#' @keywords rsml
+#' @import rgl
+#' @return null
+#' @export
+plot_multiple.plant =  function(..., threed = F, lims = NULL, aspect = NULL) {
+    objs <- as.list(...)
+
+    if (is.null(lims)){
+      xlims <- range(sapply(objs, xrangePlant))
+      ylims <- range(sapply(objs, yrangePlant))
+      zlims <- range(sapply(objs, zrangePlant))
+      lims <- rbind(xlims, ylims, zlims)
+    }
+    if (is.null(aspect)){
+      aspect <- c(diff(xlims), diff(ylims), diff(zlims))
+    }
+    if(threed){
+      rgl::plot3d(1, 1, 1, type="n", xlim=lims[1, ], ylim=lims[2, ] , zlim=lims[3, ], ylab="", xlab="", aspect = aspect)
+      for (k in 1:length(objs)){
+        obj <- objs[[k]]
+        for(j in 1:nPrimRoot(obj)){
+          r <- obj$roots[[j]]
+          rgl::plot3d(coords(r)$x, coords(r)$y, coords(r)$z, lwd=2, col="red", type="l", add=T)
+          if(nChild(r) > 0){
+            for(i in 1:nChild(r)){
+              rr <- r$children[[i]]
+              rgl::plot3d(coords(rr)$x, coords(rr)$y, coords(rr)$z, lwd=2, col="green", type='l', add=T)
+              if(nChild(rr) > 0){
+                for(k in 1:nChild(rr)){
+                  rrr <- rr$children[[k]]
+                  rgl::plot3d(coords(rrr)$x, coords(rrr)$y, coords(rrr)$z, lwd=2, col="yellow", type='l', add=T)
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      plot(1, 1, type="n", xlim=lims[1, ], ylim=lims[2, ], ylab="", xlab="")
+      for (k in 1:length(objs)){
+        obj <- objs[[k]]
+        
+        for(j in 1:nPrimRoot(obj)){
+          r <- obj$roots[[j]]
+          lines(coords(r)$x, -coords(r)$y, lwd=2, col="red")
+          if(nChild(r) > 0){
+            for(i in 1:nChild(r)){
+              rr <- r$children[[i]]
+              lines(coords(rr)$x, -coords(rr)$y, lwd=2, col="green")
+              if(nChild(rr) > 0){
+                for(k in 1:nChild(rr)){
+                  rrr <- rr$children[[k]]
+                  lines(coords(rrr)$x, -coords(rrr)$y, lwd=2, col="yellow")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+}
 
 ############################################################
 #' Summary of the plant

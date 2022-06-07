@@ -364,6 +364,7 @@ totalLength =
 #' data(lupin)
 #' r <- lupin$roots[[1]]
 #' coords(r)
+#' @export
 coords = 
   function(obj)
   {

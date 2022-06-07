@@ -4,7 +4,7 @@
 \alias{plot.plant}
 \title{Plot the root system}
 \usage{
-\method{plot}{plant}(x, threed = F, ...)
+\method{plot}{plant}(x, threed = F, aspect = T, add = F, ...)
 }
 \arguments{
 \item{x}{object of class plant}
