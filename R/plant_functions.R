@@ -365,7 +365,7 @@ plot.plant =
 #' @import rgl
 #' @return null
 #' @export
-plot_multiple.plant =  function(..., threed = F, lims = NULL, aspect = NULL) {
+plot_field =  function(..., threed = F, lims = NULL, aspect = NULL) {
     objs <- as.list(...)
 
     if (is.null(lims)){
