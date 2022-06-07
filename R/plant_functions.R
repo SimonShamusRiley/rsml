@@ -357,7 +357,7 @@ plot.plant =
 
 ############################################################
 
-#' Plot all the root system in a list of "plant" objects
+#' @title Plot all the root system in a list of "plant" objects
 #' @param x object of class plant
 #' @param threed make a 3D plot for the plant
 #' @param ... plant objects, or a single list of plant objects
