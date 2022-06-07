@@ -16,7 +16,8 @@ Description: Read and analyse Root System Markup Language (RSML) files, used to
     here: http://rootsystemml.github.io/
 License: GPL-2
 Imports:
-    XML,rgl
+    rgl,
+    XML
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
