@@ -1,0 +1,23 @@
+Package: rsml
+Title: Plant Root System Markup Language (RSML) File Processing
+Version: 1.2
+Date: 2014-07-22
+Authors@R: 
+    person(given = "Guillaume",
+           family = "Lobet",
+           role = c("aut"),
+           email = "guillaume.lobet@ulg.ac.be")
+    person(given = "Simon",
+           family = "Riley",
+           role = c("ctb", "cre"),
+           email = "ssriley@protonmail.com")
+Description: Read and analyse Root System Markup Language (RSML) files, used to
+    store plant root system architecture data. More information can be found
+    here: http://rootsystemml.github.io/
+License: GPL-2
+Imports:
+    XML,rgl
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
