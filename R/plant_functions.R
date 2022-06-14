@@ -366,8 +366,14 @@ plot.plant =
 #' @return null
 #' @export
 plot_field =  function(..., threed = F, lims = NULL, aspect = NULL) {
-    objs <- as.list(...)
-
+    
+    objs <- list(...)
+    if (length(objs) == 1 & all(sapply(objs[[1]], class) == 'plant')){
+      objs = objs[[1]]
+    } else if (!all(sapply(objs, class) == 'plant')) {
+      stop(simpleError('Arguments supplied to ... must either be one or more "plant" objects or a single list of "plant" objects'))
+    }
+    
     if (is.null(lims)){
       xlims <- range(sapply(objs, xrangePlant))
       ylims <- range(sapply(objs, yrangePlant))
@@ -378,7 +384,7 @@ plot_field =  function(..., threed = F, lims = NULL, aspect = NULL) {
       aspect <- c(diff(xlims), diff(ylims), diff(zlims))
     }
     if(threed){
-      rgl::plot3d(1, 1, 1, type="n", xlim=lims[1, ], ylim=lims[2, ] , zlim=lims[3, ], ylab="", xlab="", aspect = aspect)
+      rgl::plot3d(1, 1, 1, type="n", xlim=lims[1, ], ylim=lims[2, ] , zlim=lims[3, ], ylab="Y", xlab="X", aspect = aspect)
       for (k in 1:length(objs)){
         obj <- objs[[k]]
         for(j in 1:nPrimRoot(obj)){
